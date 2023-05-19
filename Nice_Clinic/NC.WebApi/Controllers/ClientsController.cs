@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NC.Core.Domain;
+using NC.Manager.Interfaces;
 
 namespace NC.WebApi.Controllers;
 
@@ -7,25 +8,22 @@ namespace NC.WebApi.Controllers;
 [ApiController]
 public class ClientsController : ControllerBase
 {
-    [HttpGet] 
-    public IActionResult Get()
-    {
-        List<Client> clients = new() {
-            new Client
-            {
-                Id=1,
-                Name="João do caminhao",
-                BirthDate =new DateTime(1988,12,30)
-            }
-            ,
-            new Client
-            {
-                Id=2,
-                Name="Mariao do caminhao",
-                BirthDate =new DateTime(1989,11,3)
-            },
+    private readonly IClientManager clientManager;
 
-        };
-        return Ok(clients);
+    public ClientsController(IClientManager clientManager)
+    {
+        this.clientManager = clientManager;
+    }
+
+    [HttpGet] 
+    public async Task<IActionResult> Get()
+    {
+        return Ok(await clientManager.GetClientsAsync());
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> Get(int id)
+    {
+        return Ok(await clientManager.GetClientAsync(id));
     }
 }

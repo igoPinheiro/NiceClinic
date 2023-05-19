@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NC.Core\NC.Core.csproj" />
+    <ProjectReference Include="..\NC.Manager\NC.Manager.csproj" />
   </ItemGroup>
 
 </Project>
