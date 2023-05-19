@@ -29,4 +29,31 @@ public class ClientRepository : IClientRepository
         //return await context.Clients.AsNoTracking().FirstOrDefaultAsync(f => f.Id==id);
         // return await context.Clients.AsNoTracking().Where(w=> w.Id == id).FirstOrDefaultAsync();
     }
+
+    public async Task<Client?> InsertClientAsync(Client client)
+    {
+        await context.Clients.AddAsync(client);
+        await context.SaveChangesAsync();
+        return client;
+    }
+
+    public async Task<Client?> UpdateClientAsync(Client client)
+    {
+        var c = await GetClientAsync(client.Id);
+
+        if(c == null)
+            return null;
+        
+        context.Entry(c).CurrentValues.SetValues(client);
+        //context.Clients.Update(c);
+        await context.SaveChangesAsync();
+        return c;
+    }
+
+    public async Task DeleteClientAsync(int id)
+    {
+        var c = await GetClientAsync(id);
+        context.Clients.Remove(c);
+        await context.SaveChangesAsync();
+    }
 }
