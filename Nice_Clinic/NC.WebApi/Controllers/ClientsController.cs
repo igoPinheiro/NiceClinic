@@ -15,7 +15,7 @@ public class ClientsController : ControllerBase
         this.clientManager = clientManager;
     }
 
-    [HttpGet] 
+    [HttpGet]
     public async Task<IActionResult> Get()
     {
         return Ok(await clientManager.GetClientsAsync());
@@ -25,5 +25,32 @@ public class ClientsController : ControllerBase
     public async Task<IActionResult> Get(int id)
     {
         return Ok(await clientManager.GetClientAsync(id));
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Post([FromBody] Client client)
+    {
+        var clientAdd = await clientManager.InsertClientAsync(client);
+
+        return CreatedAtAction(nameof(Get), new { id = client.Id }, clientAdd);
+    }
+
+    [HttpPut]
+    public async Task<IActionResult> Put([FromBody] Client client)
+    {
+        var clientUpd = await clientManager.UpdateClientAsync(client);
+
+        if (clientUpd == null)
+            return NotFound();
+
+        return Ok(clientUpd);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        await clientManager.DeleteClientAsync(id);
+
+        return NoContent();
     }
 }

@@ -21,4 +21,19 @@ public class ClientManager : IClientManager
     {
         return await clientRepository.GetClientAsync(id);
     }
+
+    public async Task DeleteClientAsync(int id)
+    {
+         await clientRepository.DeleteClientAsync(id);
+    }
+
+    public async Task<Client?> InsertClientAsync(Client client)
+    {
+        return await clientRepository.InsertClientAsync(client);
+    }
+
+    public async Task<Client?> UpdateClientAsync(Client client)
+    {
+        return await clientRepository.UpdateClientAsync(client);
+    }
 }
