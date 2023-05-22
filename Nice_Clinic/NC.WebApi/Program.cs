@@ -1,21 +1,37 @@
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using NC.Data.Context;
 using NC.Data.Repository;
 using NC.Manager.Implementation;
 using NC.Manager.Interfaces;
+using NC.Manager.Validator;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services
+    .AddControllers()
+   //.AddFluentValidation(options =>
+   //{
+   //    // Validate child properties and root collection elements
+   //    options.ImplicitlyValidateChildProperties = true;
+   //    options.ImplicitlyValidateRootCollectionElements = true;
 
-builder.Services.AddControllers();
+   //    // Automatic registration of validators in assembly
+   //    options.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+   //});
+   .AddFluentValidation(config =>
+   {
+       config.RegisterValidatorsFromAssemblyContaining<ClientValidator>();
+       config.ValidatorOptions.LanguageManager.Culture = new System.Globalization.CultureInfo("pt-BR");
+   });
 
 builder.Services.AddDbContext<NCContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-builder.Services.AddScoped<IClientRepository,ClientRepository>();
+builder.Services.AddScoped<IClientRepository, ClientRepository>();
 builder.Services.AddScoped<IClientManager, ClientManager>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
