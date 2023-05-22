@@ -8,11 +8,16 @@ public class Client
     [StringLength(100,MinimumLength =3,ErrorMessage ="Nome deve ter entre 3 e 100 caracteres")]
     public string? Name { get; set; }    
     public DateTime BirthDate { get; set; }
-   // public Sexo Sexo { get; set; }
+    [MaxLength(1)]
+    public string? Sexo { get; set; }
+    [MaxLength(20)]
+    public string? Phone { get; set; }
+    // public Sexo Sexo { get; set; }
     //public ICollection<Phone> Phones { get; set; }
-    //public string? Document { get; set; }
+    [MaxLength(50)]
+    public string? Document { get; set; } = null;
     //public DateTime CreationDate { get; set; }
     //public DateTime? LastUpdate { get; set; }
 
-   // public Endereco Endereco { get; set; }
+    // public Endereco Endereco { get; set; }
 }
