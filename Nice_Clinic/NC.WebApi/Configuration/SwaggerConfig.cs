@@ -1,4 +1,5 @@
 ﻿using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 namespace NC.WebApi.Configuration;
 
@@ -28,6 +29,14 @@ public static class SwaggerConfig
                     TermsOfService = new Uri("https://github.com/igoPinheiro/NiceClinic")
 
                 });
+
+            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory,xmlFile);
+
+            c.IncludeXmlComments(xmlPath);
+
+            xmlPath = Path.Combine(AppContext.BaseDirectory, "NC.Core.Shared.xml");
+            c.IncludeXmlComments(xmlPath);
         });
     }
 
