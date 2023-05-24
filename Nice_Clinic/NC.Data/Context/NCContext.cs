@@ -7,6 +7,9 @@ public class NCContext : DbContext
 {
     public DbSet<Client> Clients { get; set; }
 
-    public NCContext(DbContextOptions options) : base (options) { }  
+    public NCContext(DbContextOptions options) : base (options) {
+    
+        
+    }  
     
 }
