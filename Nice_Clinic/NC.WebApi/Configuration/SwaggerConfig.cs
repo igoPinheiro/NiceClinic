@@ -1,4 +1,6 @@
-﻿using Microsoft.OpenApi.Models;
+﻿using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Swagger;
 using System.Reflection;
 
 namespace NC.WebApi.Configuration;
@@ -29,6 +31,7 @@ public static class SwaggerConfig
                     TermsOfService = new Uri("https://github.com/igoPinheiro/NiceClinic")
 
                 });
+            
 
             var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             var xmlPath = Path.Combine(AppContext.BaseDirectory,xmlFile);
@@ -38,6 +41,8 @@ public static class SwaggerConfig
             xmlPath = Path.Combine(AppContext.BaseDirectory, "NC.Core.Shared.xml");
             c.IncludeXmlComments(xmlPath);
         });
+
+        services.AddFluentValidationRulesToSwagger();
     }
 
     public static void UseSwaggerConfiguration(this IApplicationBuilder app)
