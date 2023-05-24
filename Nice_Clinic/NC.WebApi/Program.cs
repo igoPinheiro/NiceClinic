@@ -3,10 +3,13 @@ using Serilog;
 
 Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
-    .WriteTo.Console()
+    .WriteTo.Async(a=> a.Console())
+    .WriteTo.Async(b=> b.File("log.txt", fileSizeLimitBytes: 100000, rollOnFileSizeLimit: true, rollingInterval: RollingInterval.Day))
+
+   // .WriteTo.Console()
     //.WriteTo.File("log.txt",fileSizeLimitBytes: 100000) // limitando a 100KB. Quando atingir 100Kb, ele apaga os log mais antigos, para dar espaçõ aos logs mais novos. 
   //  .WriteTo.File("log.txt", fileSizeLimitBytes: 100000, rollOnFileSizeLimit:true) // Cria um novo arquivo a casa 100KB
-    .WriteTo.File("log.txt", fileSizeLimitBytes: 100000, rollOnFileSizeLimit: true, rollingInterval: RollingInterval.Day) // Cria um arquivo por dia se esse arquivo nesse dia chegar a 100kb ele cria outro
+    //.WriteTo.File("log.txt", fileSizeLimitBytes: 100000, rollOnFileSizeLimit: true, rollingInterval: RollingInterval.Day) // Cria um arquivo por dia se esse arquivo nesse dia chegar a 100kb ele cria outro
     .CreateLogger();
 
 
