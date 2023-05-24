@@ -16,8 +16,8 @@ public class Client
     //public ICollection<Phone> Phones { get; set; }
     [MaxLength(50)]
     public string? Document { get; set; } = null;
-    //public DateTime CreationDate { get; set; }
-    //public DateTime? LastUpdate { get; set; }
+    public DateTime CreationDate { get; set; }
+    public DateTime? LastUpdate { get; set; }
 
     // public Endereco Endereco { get; set; }
 }
