@@ -1,5 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-using NC.Data.Context;
 using NC.WebApi.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,10 +9,7 @@ builder.Services.AddFluentValidationConfiguration();
 
 builder.Services.AddAutoMapperConfiguration();
 
-builder.Services.AddDbContext<NCContext>(options =>
-{
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"), o => o.CommandTimeout(60));
-});
+builder.Services.AddDatabaseConfiguration(builder.Configuration);
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
@@ -26,6 +21,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerConfiguration();
 
 var app = builder.Build();
+
+app.UseDatabaseConfiguration();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
