@@ -18,6 +18,5 @@ public class Client
     public string? Document { get; set; } = null;
     public DateTime CreationDate { get; set; }
     public DateTime? LastUpdate { get; set; }
-
     // public Endereco Endereco { get; set; }
 }

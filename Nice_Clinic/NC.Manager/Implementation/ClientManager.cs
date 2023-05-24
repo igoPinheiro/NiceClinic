@@ -1,4 +1,6 @@
-﻿using NC.Core.Domain;
+﻿using AutoMapper;
+using NC.Core.Domain;
+using NC.Core.Shared.ModelViews;
 using NC.Manager.Interfaces;
 
 namespace NC.Manager.Implementation;
@@ -6,10 +8,12 @@ namespace NC.Manager.Implementation;
 public class ClientManager : IClientManager
 {
     private readonly IClientRepository clientRepository;
+    private readonly IMapper mapper;
 
-    public ClientManager(IClientRepository clientRepository)
+    public ClientManager(IClientRepository clientRepository, IMapper mapper)
     {
         this.clientRepository = clientRepository;
+        this.mapper = mapper;
     }
 
     public async Task<IEnumerable<Client>> GetClientsAsync()
@@ -27,13 +31,17 @@ public class ClientManager : IClientManager
          await clientRepository.DeleteClientAsync(id);
     }
 
-    public async Task<Client?> InsertClientAsync(Client client)
+    public async Task<Client?> InsertClientAsync(NewClient newClient)
     {
+        var client =mapper.Map<Client>(newClient);
+
         return await clientRepository.InsertClientAsync(client);
     }
 
-    public async Task<Client?> UpdateClientAsync(Client client)
+    public async Task<Client?> UpdateClientAsync(UpdateClient updateClient)
     {
+        var client = mapper.Map<Client>(updateClient);
+
         return await clientRepository.UpdateClientAsync(client);
     }
 }

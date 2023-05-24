@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NC.Core.Domain;
+using NC.Core.Shared.ModelViews;
 using NC.Manager.Interfaces;
 
 namespace NC.WebApi.Controllers;
@@ -28,17 +29,17 @@ public class ClientsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post([FromBody] Client client)
+    public async Task<IActionResult> Post([FromBody] NewClient newClient)
     {
-        var clientAdd = await clientManager.InsertClientAsync(client);
+        var clientAdd = await clientManager.InsertClientAsync(newClient);
 
-        return CreatedAtAction(nameof(Get), new { id = client.Id }, clientAdd);
+        return CreatedAtAction(nameof(Get), new { id = clientAdd.Id }, clientAdd);
     }
 
     [HttpPut]
-    public async Task<IActionResult> Put([FromBody] Client client)
+    public async Task<IActionResult> Put([FromBody] UpdateClient updateclient)
     {
-        var clientUpd = await clientManager.UpdateClientAsync(client);
+        var clientUpd = await clientManager.UpdateClientAsync(updateclient);
 
         if (clientUpd == null)
             return NotFound();

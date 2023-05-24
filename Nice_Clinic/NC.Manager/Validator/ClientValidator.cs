@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
-using NC.Core.Domain;
+using NC.Core.Shared.ModelViews;
 
 namespace NC.Manager.Validator;
 
-public class ClientValidator : AbstractValidator<Client>
+public class ClientValidator : AbstractValidator<NewClient>
 {
     public ClientValidator()
     {
