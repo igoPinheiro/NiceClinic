@@ -2,6 +2,7 @@
 using NC.Core.Domain;
 using NC.Core.Shared.ModelViews;
 using NC.Manager.Interfaces;
+using SerilogTimings;
 
 namespace NC.WebApi.Controllers;
 
@@ -10,10 +11,12 @@ namespace NC.WebApi.Controllers;
 public class ClientsController : ControllerBase
 {
     private readonly IClientManager clientManager;
+    private readonly ILogger<ClientsController> logger;
 
-    public ClientsController(IClientManager clientManager)
+    public ClientsController(IClientManager clientManager, ILogger<ClientsController> logger)
     {
         this.clientManager = clientManager;
+        this.logger = logger;
     }
 
     /// <summary>
@@ -24,7 +27,10 @@ public class ClientsController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails),StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Get()
     {
-        return Ok(await clientManager.GetClientsAsync());
+        using(Operation.Time("Tempo de consulta de clientes"))
+        {
+            return Ok(await clientManager.GetClientsAsync());
+        }
     }
     /// <summary>
     /// Retorna um cliente consultado pelo Id
@@ -35,7 +41,7 @@ public class ClientsController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Get(int id)
-    {
+    {      
         return Ok(await clientManager.GetClientAsync(id));
     }
 
@@ -46,11 +52,23 @@ public class ClientsController : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(Client), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Post([FromBody] NewClient newClient)
     {
-        var clientAdd = await clientManager.InsertClientAsync(newClient);
+        try
+        {
+            var clientAdd = await clientManager.InsertClientAsync(newClient);
 
-        return CreatedAtAction(nameof(Get), new { id = clientAdd.Id }, clientAdd);
+            return CreatedAtAction(nameof(Get), new { id = clientAdd.Id }, clientAdd);
+        }
+        catch (Exception e)
+        {
+            logger.LogError("Json Novo Cliente Recebido: {@newClient}", newClient);
+            logger.LogError("Mensagem: {@msg}",e.Message );
+            logger.LogError("Stack: {@msg}", e.StackTrace);
+            return BadRequest(e.Message);
+        }
+       
     }
 
     /// <summary>
@@ -60,15 +78,25 @@ public class ClientsController : ControllerBase
     [HttpPut]
     [ProducesResponseType(typeof(Client), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Put([FromBody] UpdateClient updateclient)
     {
-        var clientUpd = await clientManager.UpdateClientAsync(updateclient);
+        try
+        {
+            var clientUpd = await clientManager.UpdateClientAsync(updateclient);
 
-        if (clientUpd == null)
-            return NotFound();
+            if (clientUpd == null)
+                throw new Exception("Usuario não encontrado");
 
-        return Ok(clientUpd);
+            return Ok(clientUpd);
+        }
+        catch (Exception e)
+        {
+            logger.LogWarning("Json Cliente Recebido: {@updateclient}", updateclient);
+            return  BadRequest(e.Message);
+        }
+        
     }
 
     /// <summary>

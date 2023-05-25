@@ -39,11 +39,13 @@ public class ClientRepository : IClientRepository
 
     public async Task<Client?> UpdateClientAsync(Client client)
     {
-        var c = await GetClientAsync(client.Id);
+        var c = await GetClientAsync(client.Id);        
 
         if(c == null)
             return null;
-        
+
+        client.CreationDate = c.CreationDate;
+
         context.Entry(c).CurrentValues.SetValues(client);
         //context.Clients.Update(c);
         await context.SaveChangesAsync();
