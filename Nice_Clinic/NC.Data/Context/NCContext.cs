@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NC.Core.Domain;
+using NC.Data.Configuration;
 
 namespace NC.Data.Context;
 
@@ -10,6 +11,12 @@ public class NCContext : DbContext
     public NCContext(DbContextOptions options) : base (options) {
     
         
-    }  
-    
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.ApplyConfiguration(new ClientConfiguration());
+    }
 }
