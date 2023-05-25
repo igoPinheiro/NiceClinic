@@ -13,7 +13,6 @@ try
 
     builder.Host.UseSerilog();
 
-
     // Add services to the container.
     builder.Services.AddControllers();
 
@@ -34,13 +33,19 @@ try
 
     var app = builder.Build();
 
+    app.UseExceptionHandler("/error");
+
     app.UseDatabaseConfiguration();
 
     // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())
     {
-        app.UseSwaggerConfiguration();
+        app.UseDeveloperExceptionPage();
+            
     }
+
+    app.UseSwaggerConfiguration();
+
 
     app.UseHttpsRedirection();
 
@@ -67,7 +72,7 @@ static IConfigurationRoot LogConfig()
     var configuration = new ConfigurationBuilder()
         .SetBasePath(Directory.GetCurrentDirectory())
         .AddJsonFile("appsettings.json")
-        .AddJsonFile($"appsettings.{environment}.json")
+        .AddJsonFile($"appsettings.{environment}.json",optional:true)
         .Build();
     return configuration;
 }

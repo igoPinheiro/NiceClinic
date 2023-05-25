@@ -2,6 +2,7 @@
 using NC.Core.Domain;
 using NC.Core.Shared.ModelViews;
 using NC.Manager.Interfaces;
+using NC.WebApi.Utils;
 using SerilogTimings;
 
 namespace NC.WebApi.Controllers;
@@ -39,10 +40,11 @@ public class ClientsController : ControllerBase
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(Client), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
-    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Get(int id)
-    {      
-        return Ok(await clientManager.GetClientAsync(id));
+    {
+        var c = await clientManager.GetClientAsync(id);
+        return c == null ? NotFound(new ApiResponse(404, $"Cliente não encontrado.( id ={id}) ")) : Ok(c);
     }
 
     /// <summary>
