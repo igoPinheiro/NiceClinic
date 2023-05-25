@@ -7,6 +7,7 @@ namespace NC.Data.Context;
 public class NCContext : DbContext
 {
     public DbSet<Client> Clients { get; set; }
+    public DbSet<Address> Address { get; set; }
 
     public NCContext(DbContextOptions options) : base (options) {
     
@@ -18,5 +19,6 @@ public class NCContext : DbContext
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.ApplyConfiguration(new ClientConfiguration());
+        modelBuilder.ApplyConfiguration(new AddressConfiguration());
     }
 }
