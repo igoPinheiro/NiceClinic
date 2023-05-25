@@ -1,17 +1,9 @@
 using NC.WebApi.Configuration;
 using Serilog;
 
-Log.Logger = new LoggerConfiguration()
-    .Enrich.FromLogContext()
-    .WriteTo.Async(a=> a.Console())
-    .WriteTo.Async(b=> b.File("log.txt", fileSizeLimitBytes: 100000, rollOnFileSizeLimit: true, rollingInterval: RollingInterval.Day))
+IConfigurationRoot configuration = LogConfig();
 
-   // .WriteTo.Console()
-    //.WriteTo.File("log.txt",fileSizeLimitBytes: 100000) // limitando a 100KB. Quando atingir 100Kb, ele apaga os log mais antigos, para dar espaçõ aos logs mais novos. 
-  //  .WriteTo.File("log.txt", fileSizeLimitBytes: 100000, rollOnFileSizeLimit:true) // Cria um novo arquivo a casa 100KB
-    //.WriteTo.File("log.txt", fileSizeLimitBytes: 100000, rollOnFileSizeLimit: true, rollingInterval: RollingInterval.Day) // Cria um arquivo por dia se esse arquivo nesse dia chegar a 100kb ele cria outro
-    .CreateLogger();
-
+ConfigLog(configuration);
 
 try
 {
@@ -66,4 +58,29 @@ catch (Exception ex)
 finally
 {
     Log.CloseAndFlush();
+}
+
+static IConfigurationRoot LogConfig()
+{
+    var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+    var configuration = new ConfigurationBuilder()
+        .SetBasePath(Directory.GetCurrentDirectory())
+        .AddJsonFile("appsettings.json")
+        .AddJsonFile($"appsettings.{environment}.json")
+        .Build();
+    return configuration;
+}
+
+static void ConfigLog(IConfigurationRoot configuration)
+{
+    Log.Logger = new LoggerConfiguration()
+       .ReadFrom.Configuration(configuration)
+       .CreateLogger();
+
+
+    //.WriteTo.File("log.txt",fileSizeLimitBytes: 100000) // limitando a 100KB. Quando atingir 100Kb, ele apaga os log mais antigos, para dar espaçõ aos logs mais novos. 
+    //  .WriteTo.File("log.txt", fileSizeLimitBytes: 100000, rollOnFileSizeLimit:true) // Cria um novo arquivo a casa 100KB
+    //.WriteTo.File("log.txt", fileSizeLimitBytes: 100000, rollOnFileSizeLimit: true, rollingInterval: RollingInterval.Day) // Cria um arquivo por dia se esse arquivo nesse dia chegar a 100kb ele cria outro
+
 }
