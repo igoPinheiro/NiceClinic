@@ -25,7 +25,9 @@ public class ClientRepository : IClientRepository
 
     public async Task<Client?> GetClientAsync(int id)
     {
-        return await context.Clients.FindAsync(id);
+        var r = await context.Clients.FindAsync(id);
+
+        return r ?? null;
         //return await context.Clients.AsNoTracking().FirstOrDefaultAsync(f => f.Id==id);
         // return await context.Clients.AsNoTracking().Where(w=> w.Id == id).FirstOrDefaultAsync();
     }
