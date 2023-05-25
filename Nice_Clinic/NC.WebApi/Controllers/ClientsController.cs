@@ -2,6 +2,7 @@
 using NC.Core.Domain;
 using NC.Core.Shared.ModelViews;
 using NC.Manager.Interfaces;
+using SerilogTimings;
 
 namespace NC.WebApi.Controllers;
 
@@ -10,10 +11,12 @@ namespace NC.WebApi.Controllers;
 public class ClientsController : ControllerBase
 {
     private readonly IClientManager clientManager;
+    private readonly ILogger<ClientsController> logger;
 
-    public ClientsController(IClientManager clientManager)
+    public ClientsController(IClientManager clientManager, ILogger<ClientsController> logger)
     {
         this.clientManager = clientManager;
+        this.logger = logger;
     }
 
     /// <summary>
@@ -24,7 +27,10 @@ public class ClientsController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails),StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Get()
     {
-        return Ok(await clientManager.GetClientsAsync());
+        using(Operation.Time("Tempo de consulta de clientes"))
+        {
+            return Ok(await clientManager.GetClientsAsync());
+        }
     }
     /// <summary>
     /// Retorna um cliente consultado pelo Id
