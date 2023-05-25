@@ -11,5 +11,7 @@ public class NewClientMappingProfile : Profile
         CreateMap<NewClient, Client>()
             .ForMember(d=> d.CreationDate, o=> o.MapFrom(origin=> DateTime.Now))
             .ForMember(d=> d.BirthDate, o=> o.MapFrom(origin => origin.BirthDate.Date));
+
+        CreateMap<NewAddress, Address>();
     }
 }

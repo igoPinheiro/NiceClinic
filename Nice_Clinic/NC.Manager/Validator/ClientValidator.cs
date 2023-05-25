@@ -14,6 +14,7 @@ public class ClientValidator : AbstractValidator<NewClient>
         RuleFor(x => x.Document).NotNull().NotEmpty().MinimumLength(4).MaximumLength(14);
         RuleFor(x => x.Phone).NotNull().NotEmpty().Matches(FrtPhone).WithMessage("O telefone tem que ter o formato "+FrtPhone);
         RuleFor(x => x.Sexo).NotNull().NotEmpty().Must(IsMorF).WithMessage("Sexo precisa ser M ou F");
+        RuleFor(x => x.Address).SetValidator(new NewAddressValidator());
     }
 
     private bool IsMorF(string? s)

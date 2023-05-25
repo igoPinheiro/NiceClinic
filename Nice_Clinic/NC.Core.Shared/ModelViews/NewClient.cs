@@ -4,7 +4,7 @@
 /// Objeto Utilizado para inserção de um novo cliente
 /// </summary>
 public class NewClient
-{
+{    
     /// <summary>
     /// Nome do cliente
     /// </summary>
@@ -30,4 +30,6 @@ public class NewClient
     /// </summary>
     /// <example>12342234244</example>
     public string? Document { get; set; } = null;
+
+    public NewAddress? Address { get; set; }
 }

@@ -1,4 +1,5 @@
 using NC.WebApi.Configuration;
+using Newtonsoft.Json;
 using Serilog;
 
 IConfigurationRoot configuration = LogConfig();
@@ -14,7 +15,8 @@ try
     builder.Host.UseSerilog();
 
     // Add services to the container.
-    builder.Services.AddControllers();
+    builder.Services.AddControllers()
+        .AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling =ReferenceLoopHandling.Ignore);
 
     builder.Services.AddFluentValidationConfiguration();
 

@@ -20,12 +20,17 @@ public class ClientRepository : IClientRepository
     //armazenamento adicional das entidades que são devolvidos pela consulta.
     public async Task<IEnumerable<Client>> GetClientsAsync()
     {
-        return await context.Clients.AsNoTracking().ToListAsync();
+        return await context.Clients
+            .Include(i=> i.Address)
+            .AsNoTracking().ToListAsync();
     }
 
     public async Task<Client?> GetClientAsync(int id)
     {
-        var r = await context.Clients.FindAsync(id);
+        var r = await context.Clients
+            .Include(i=> i.Address)
+            .SingleOrDefaultAsync(p=> p.Id == id);
+       // var r = await context.Clients.FindAsync(id);
 
         return r ?? null;
         //return await context.Clients.AsNoTracking().FirstOrDefaultAsync(f => f.Id==id);
