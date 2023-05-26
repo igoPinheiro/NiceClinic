@@ -21,7 +21,8 @@ public class ClientRepository : IClientRepository
     public async Task<IEnumerable<Client>> GetClientsAsync()
     {
         return await context.Clients
-            .Include(i=> i.Address)
+            .Include(i => i.Address)
+            .Include(t => t.Phones)
             .AsNoTracking().ToListAsync();
     }
 
@@ -29,6 +30,7 @@ public class ClientRepository : IClientRepository
     {
         var r = await context.Clients
             .Include(i=> i.Address)
+            .Include(t => t.Phones)
             .SingleOrDefaultAsync(p=> p.Id == id);
        // var r = await context.Clients.FindAsync(id);
 
@@ -62,6 +64,7 @@ public class ClientRepository : IClientRepository
     public async Task DeleteClientAsync(int id)
     {
         var c = await GetClientAsync(id);
+        if(c == null) return;
         context.Clients.Remove(c);
         await context.SaveChangesAsync();
     }

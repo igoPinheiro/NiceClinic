@@ -10,10 +10,8 @@ public class Client
     public DateTime BirthDate { get; set; }
     [MaxLength(1)]
     public string? Sexo { get; set; }
-    [MaxLength(20)]
-    public string? Phone { get; set; }
     // public Sexo Sexo { get; set; }
-    //public ICollection<Phone> Phones { get; set; }
+    public ICollection<Phone> Phones { get; set; }
     [MaxLength(50)]
     public string? Document { get; set; } = null;
     public DateTime CreationDate { get; set; }
