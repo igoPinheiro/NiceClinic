@@ -1,5 +1,4 @@
 ﻿using FluentValidation.AspNetCore;
-using NC.Core.Shared.ModelViews;
 using NC.Manager.Validator;
 
 namespace NC.WebApi.Configuration;
@@ -14,6 +13,7 @@ public static class FluentValidationConfiguration
                config.RegisterValidatorsFromAssemblyContaining<ClientValidator>();
                config.RegisterValidatorsFromAssemblyContaining<UpdateClientValidator>();
                config.RegisterValidatorsFromAssemblyContaining<NewAddressValidator>();
+               config.RegisterValidatorsFromAssemblyContaining<NewPhoneValidator>();
                config.ValidatorOptions.LanguageManager.Culture = new System.Globalization.CultureInfo("pt-BR");
            });
     }

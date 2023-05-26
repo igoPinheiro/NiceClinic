@@ -20,11 +20,7 @@ public class NewClient
     /// </summary>
     /// <example>M</example>
     public string? Sexo { get; set; }
-    /// <summary>
-    /// Telefone do Cliente
-    /// </summary>
-    /// <example>92981384657</example>
-    public string? Phone { get; set; }
+    public ICollection<NewPhone> Phones { get; set; }
     /// <summary>
     /// Documento do cliente: CNH, CPF ,RG
     /// </summary>
